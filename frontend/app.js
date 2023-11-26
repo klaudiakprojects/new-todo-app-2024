@@ -5,54 +5,45 @@ const allTab = document.getElementById("allTab");
 const pendingTab = document.getElementById("pendingTab");
 const doneTab = document.getElementById("doneTab");
 const todos = [];
+let viewTodos = [];
 
-addTodoButton.addEventListener("click", (event) => {
+const addTodo = (id, name, status) => {
+    todos.push({id, name, status})
+}
 
-    event.preventDefault();
-
-    let todoName = newTodo.value;
-    let todoStatus = '';
+const renderTodo = (id, name, status="Pending") => {
 
     const newTodoDiv = document.createElement("div");
     newTodoDiv.setAttribute("class", "new-todo-div");
     allTodos.appendChild(newTodoDiv);
-    newTodoDiv.id = todos.length.toString();
-
-    let newTodoItem = {
-        name: todoName,
-        status: "Pending"
-    };
-
-    todos.push(newTodoItem);
+    newTodoDiv.id = id;
 
     const newAddedTodo = document.createElement("li");
     newAddedTodo.setAttribute("class", "new-added-todo");
-    newAddedTodo.innerText = todoName;
+    newAddedTodo.innerText = name;
     newTodoDiv.appendChild(newAddedTodo);
 
     newTodo.value = "";
-
-    console.log("Nowe todo dodane:", newTodoDiv);
-    console.log(newTodoItem)
 
     //DONE BUTTON
     const doneButton = document.createElement("input");
     doneButton.setAttribute("class", "done-todo-button");
     doneButton.setAttribute("type", "checkbox");
+    doneButton.checked = status === "Done";
     newTodoDiv.appendChild(doneButton);
 
     doneButton.addEventListener("click", (e) => {
 
         if (newAddedTodo.style.textDecoration === "line-through") {
             newAddedTodo.style.textDecoration = "none";
-            newTodoItem.status = "Pending";
+            todos[id].status = "Pending";
         } else {
             newAddedTodo.style.textDecoration = "line-through";
-            newTodoItem.status = "Done";
+            todos[id].status = "Done";
         }
 
-        console.log(newTodoItem)
     });
+
 
     //DELETE BUTTON
     const deleteButton = document.createElement("button");
@@ -64,36 +55,43 @@ addTodoButton.addEventListener("click", (event) => {
         let item = e.target;
         item.parentElement.remove();
     });
-});
+};
 
-allTab.addEventListener("click", (e) => {
+// allTab.addEventListener("click", (e) => {
 
-    if (allTab.classList.contains("active")) {
-        allTab.classList.remove("active");
-        return;
-    }
+//     if (allTab.classList.contains("active")) {
+//         allTab.classList.remove("active");
+//         return;
+//     }
 
-    pendingTab.classList.remove("active");
-    doneTab.classList.remove("active");
+//     pendingTab.classList.remove("active");
+//     doneTab.classList.remove("active");
 
-    allTab.classList.add("active");
+//     allTab.classList.add("active");
 
-});
+// });
 
-pendingTab.addEventListener("click", (e) => {
+// pendingTab.addEventListener("click", (e) => {
 
-    if (pendingTab.classList.contains("active")) {
-        pendingTab.classList.remove("active");
-        return;
-    }
+//     renderTodo();
 
-    allTab.classList.remove("active");
-    doneTab.classList.remove("active");
+//     if (pendingTab.classList.contains("active")) {
+//         pendingTab.classList.remove("active");
+//         return;
+//     }
 
-    pendingTab.classList.add("active")
-});
+//     allTab.classList.remove("active");
+//     doneTab.classList.remove("active");
+
+//     pendingTab.classList.add("active")
+// });
 
 doneTab.addEventListener("click", (e) => {
+
+    allTodos.innerHTML = "";
+ 
+    
+    // renderTodo();
 
     if (doneTab.classList.contains("active")) {
         doneTab.classList.remove("active");
@@ -103,9 +101,25 @@ doneTab.addEventListener("click", (e) => {
     allTab.classList.remove("active");
     pendingTab.classList.remove("active");
 
-    doneTab.classList.add("active")
+    doneTab.classList.add("active");
+
+    const doneTodo = todos.filter( todo => {
+        return todo.status === "Done";
+    })
+
+    doneTodo.forEach(todo => {
+        renderTodo(todo.id, todo.name, todo.status);
+    })
 
 });
 
+addTodoButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    const todoId = todos.length;
+    const todoValue = newTodo.value;
+    const todoStatus = "Pending"
+    addTodo(todoId, todoValue, todoStatus)
+    renderTodo(todoId, todoValue, todoStatus);
+});
 
 
