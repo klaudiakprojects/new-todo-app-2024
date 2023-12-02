@@ -8,10 +8,10 @@ const todos = [];
 let viewTodos = [];
 
 const addTodo = (id, name, status) => {
-    todos.push({id, name, status})
+    todos.push({ id, name, status })
 }
 
-const renderTodo = (id, name, status="Pending") => {
+const renderTodo = (id, name, status = "Pending") => {
 
     const newTodoDiv = document.createElement("div");
     newTodoDiv.setAttribute("class", "new-todo-div");
@@ -41,7 +41,6 @@ const renderTodo = (id, name, status="Pending") => {
             newAddedTodo.style.textDecoration = "line-through";
             todos[id].status = "Done";
         }
-
     });
 
 
@@ -55,61 +54,79 @@ const renderTodo = (id, name, status="Pending") => {
         let item = e.target;
         item.parentElement.remove();
     });
+
+    if (status === "Done") {
+        newAddedTodo.style.textDecoration = "line-through";
+    }
+
 };
 
-// allTab.addEventListener("click", (e) => {
+allTab.addEventListener("click", (e) => {
 
-//     if (allTab.classList.contains("active")) {
-//         allTab.classList.remove("active");
-//         return;
-//     }
+    allTodos.innerHTML = "";
 
-//     pendingTab.classList.remove("active");
-//     doneTab.classList.remove("active");
+    if (allTab.classList.contains("active")) {
+        allTab.classList.remove("active");
+        return;
+    }
 
-//     allTab.classList.add("active");
+    pendingTab.classList.remove("active");
+    doneTab.classList.remove("active");
 
-// });
+    allTab.classList.add("active");
 
-// pendingTab.addEventListener("click", (e) => {
+    todos.forEach(todo => {
+        renderTodo(todo.id, todo.name, todo.status);
+    });
 
-//     renderTodo();
+});
 
-//     if (pendingTab.classList.contains("active")) {
-//         pendingTab.classList.remove("active");
-//         return;
-//     }
+pendingTab.addEventListener("click", (e) => {
 
-//     allTab.classList.remove("active");
-//     doneTab.classList.remove("active");
+    allTodos.innerHTML = "";
 
-//     pendingTab.classList.add("active")
-// });
+    if (pendingTab.classList.contains("active")) {
+        pendingTab.classList.remove("active");
+        return;
+    }
+
+    allTab.classList.remove("active");
+    doneTab.classList.remove("active");
+
+    pendingTab.classList.add("active")
+
+    const pendingTodo = todos.filter(todo => {
+        return todo.status === "Pending";
+    });
+
+    pendingTodo.forEach(todo => {
+        renderTodo(todo.id, todo.name, todo.status);
+    });
+});
 
 doneTab.addEventListener("click", (e) => {
 
     allTodos.innerHTML = "";
- 
-    
-    // renderTodo();
 
     if (doneTab.classList.contains("active")) {
         doneTab.classList.remove("active");
         return;
-    }
+    };
 
     allTab.classList.remove("active");
     pendingTab.classList.remove("active");
 
     doneTab.classList.add("active");
 
-    const doneTodo = todos.filter( todo => {
+    const doneTodo = todos.filter(todo => {
         return todo.status === "Done";
-    })
+    });
 
     doneTodo.forEach(todo => {
         renderTodo(todo.id, todo.name, todo.status);
-    })
+    });
+
+
 
 });
 
