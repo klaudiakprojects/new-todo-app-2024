@@ -41,7 +41,7 @@ body {
     padding: 0;
 }
 
-.new-added-todo {
+.new-added-todo, .edit-todo-input {
     background-color: white;
     padding: 10px;
     border-radius: 5px;
