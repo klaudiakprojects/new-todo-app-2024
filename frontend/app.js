@@ -9,8 +9,18 @@ let viewTodos = [];
 
 allTab.classList.add('active');
 
+const sendItemToBackend = (id, name, status) => {
+    fetch('http://127.0.0.1:8888/todos', {
+        method: "post",
+        body: JSON.stringify({id, name, status}),
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+    })
+}
+
 const addTodo = (id, name, status) => {
-    todos.push({ id, name, status })
+    todos.push({ id, name, status });
+
+    sendItemToBackend(id, name, status);
 }
 
 const renderTodo = (id, name, status = 'Pending') => {

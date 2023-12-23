@@ -43,7 +43,8 @@ export class TodoPOM {
   async addNewTodo(firstTodo: string): Promise<void> {
     await this.newTodoInput.fill(firstTodo);
     await this.newTodoButton.click();
-    await expect(this.newAddedTodo).toContainText(firstTodo);
+    // @todo wait for todo to show up in html
+    expect(this.newAddedTodo).toContainText(firstTodo);
     const todoIDs = await this.getIDs();
     expect(todoIDs).toHaveLength(1);
     expect(todoIDs[0]).toEqual('0');
