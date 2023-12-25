@@ -25,6 +25,21 @@ app.get('/', (req: any, res: any) => {
     res.send('Serwer działa')
 });
 
+app.get('/todos', async (req: any, res: any) => {
+    const client = new Client({
+        user: 'postgres',
+        password: 'postgres',
+        database: 'postgres'
+    })
+    await client.connect()
+
+    const result = await client.query(
+        'SELECT * FROM todos'
+    );
+    console.log(result.rows)
+    res.status(200).send(result.rows);
+});
+
 app.post('/todos', async (req: any, res: any) => {
     console.log(req.body);
 
@@ -38,8 +53,8 @@ app.post('/todos', async (req: any, res: any) => {
     const result = await client.query(
         'INSERT INTO todos (id, name, status) VALUES ($1, $2, $3)',
         [req.body.id, req.body.name, req.body.status]
-      );
-          console.log(result) // Hello world!
+    );
+    console.log(result) // Hello world!
     await client.end()
     res.status(200).end();
 });

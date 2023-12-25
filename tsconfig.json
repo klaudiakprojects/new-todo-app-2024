@@ -10,7 +10,8 @@
     "strict": true,
     "noImplicitAny": true,
     "useUnknownInCatchVariables": false,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "types": ["cypress"]
   },
 
   "lib": [

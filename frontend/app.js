@@ -9,13 +9,26 @@ let viewTodos = [];
 
 allTab.classList.add('active');
 
+const getItemsFromBackend = async () => {
+    const response = await fetch('http://127.0.0.1:8888/todos', {
+        method: 'get'
+    });
+    const backendTodos = await response.json();
+    backendTodos.forEach(todo => {
+        renderTodo(todo.id, todo.name, todo.status);
+        todos.push(todo);
+    });
+};
+
+getItemsFromBackend();
+
 const sendItemToBackend = (id, name, status) => {
     fetch('http://127.0.0.1:8888/todos', {
-        method: "post",
-        body: JSON.stringify({id, name, status}),
-        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-    })
-}
+        method: 'post',
+        body: JSON.stringify({ id, name, status }),
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    });
+};
 
 const addTodo = (id, name, status) => {
     todos.push({ id, name, status });
@@ -86,7 +99,7 @@ const renderTodo = (id, name, status = 'Pending') => {
                 newAddedTodo.innerText = editTodoInput.value;
                 todos[id].name = editTodoInput.value;
             };
-        });   
+        });
     })
 };
 

@@ -27,12 +27,11 @@ export class TodoPOM {
     this.doneTodoButton = page.locator('.done-todo-button');
   }
 
-
-  async getIDs():Promise<string[]> {
+  async getIDs(): Promise<string[]> {
     const todoContainers = await Promise.all(await this.allTodoList.locator('div').all());
     const todoIDs = await Promise.all(todoContainers.map(async (todo) => {
       return await todo.getAttribute('id') as string;
-    })); 
+    }));
     return todoIDs;
   }
 
@@ -43,12 +42,12 @@ export class TodoPOM {
   async addNewTodo(firstTodo: string): Promise<void> {
     await this.newTodoInput.fill(firstTodo);
     await this.newTodoButton.click();
-    // @todo wait for todo to show up in html
+    await this.newAddedTodo.waitFor({ state: "visible" })
     expect(this.newAddedTodo).toContainText(firstTodo);
     const todoIDs = await this.getIDs();
     expect(todoIDs).toHaveLength(1);
     expect(todoIDs[0]).toEqual('0');
-    expect(this.allTodoList).toHaveCount(1);
+    expect(this.newAddedTodo).toHaveCount(1);
   };
 
   async editTodo(firstTodo: string, secondTodo: string): Promise<void> {
@@ -60,7 +59,7 @@ export class TodoPOM {
     const todoIDs = await this.getIDs();
     expect(todoIDs).toHaveLength(1);
     expect(todoIDs[0]).toEqual('0');
-    expect(this.allTodoList).toHaveCount(1);
+    expect(this.newAddedTodo).toHaveCount(1);
   };
 
   async deleteTodo(firstTodo: string): Promise<void> {
@@ -73,22 +72,34 @@ export class TodoPOM {
     await this.addNewTodo(firstTodo);
     await this.newTodoInput.fill(secondTodo);
     await this.newTodoButton.click();
+    await this.newAddedTodo.nth(1).waitFor({ state: "visible" })
     await expect(this.newAddedTodo.first()).toContainText(firstTodo);
     await expect(this.newAddedTodo.nth(1)).toContainText(secondTodo);
     const todoIDs = await this.getIDs();
     expect(todoIDs).toHaveLength(2);
     expect(todoIDs[0]).toEqual('0');
     expect(todoIDs[1]).toEqual('1');
-    // expect(this.allTodoList).toHaveCount(2);
+    expect(this.newAddedTodo).toHaveCount(2);
   };
 
-  async doneTodo(firstTodo:string, secondTodo: string) {
+  async doneTodo(firstTodo: string, secondTodo: string) {
     await this.addMoreTodos(firstTodo, secondTodo);
     await this.doneTodoButton.first().check();
     expect(this.doneTodoButton.first()).toBeChecked();
     expect(this.newAddedTodo.first()).toHaveAttribute('style', 'text-decoration: line-through;');
+    expect(this.newAddedTodo).toHaveCount(2);
     await this.doneTabButton.click();
     expect(this.newAddedTodo.first()).toHaveAttribute('style', 'text-decoration: line-through;');
-    expect(this.allTodoList).toHaveCount(1);
+    expect(this.newAddedTodo).toHaveCount(1);
+  };
+
+  async refreshPageAfterAddingTodos(firstTodo: string, secondTodo: string) {
+    await this.addMoreTodos(firstTodo, secondTodo);
+    await this.doneTodoButton.first().check();
+    expect(this.doneTodoButton.first()).toBeChecked();
+    expect(this.newAddedTodo.first()).toHaveAttribute('style', 'text-decoration: line-through;');
+    expect(this.newAddedTodo).toHaveCount(2);
+    await this.page.reload();
+    expect(this.newAddedTodo).toHaveCount(2);
   };
 };
