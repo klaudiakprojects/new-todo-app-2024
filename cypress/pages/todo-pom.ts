@@ -13,16 +13,16 @@ class TodoPage {
         return cy.get('.new-added-todo');
     }
 
-    addNewTodo() {
-        this.newTodoInput().type('Learn JavaScript');
+    addNewTodo(firstTodo: string) {
+        this.newTodoInput().type(firstTodo);
         this.addTodoButton().click();
         this.newAddedTodo().should('be.visible');
-        this.newAddedTodo().should('contain', 'Learn JavaScript');
+        this.newAddedTodo().should('contain', firstTodo);
     }
 
-    addMoreTodos() {
-        this.addNewTodo();
-        this.newTodoInput().type('Learn TypeScript');
+    addMoreTodos(firstTodo: string, secondTodo:string) {
+        this.addNewTodo(firstTodo);
+        this.newTodoInput().type(secondTodo);
         this.addTodoButton().click();
 
     }

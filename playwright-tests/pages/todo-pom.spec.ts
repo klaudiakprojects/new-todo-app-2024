@@ -55,6 +55,7 @@ export class TodoPOM {
     await this.newAddedTodo.click();
     await this.editTodoInput.fill(secondTodo);
     await this.page.keyboard.press('Enter');
+    await this.newAddedTodo.waitFor({ state: "visible" });
     expect(this.newAddedTodo).toContainText(secondTodo);
     const todoIDs = await this.getIDs();
     expect(todoIDs).toHaveLength(1);
@@ -100,6 +101,10 @@ export class TodoPOM {
     expect(this.newAddedTodo.first()).toHaveAttribute('style', 'text-decoration: line-through;');
     expect(this.newAddedTodo).toHaveCount(2);
     await this.page.reload();
+    const todos = await this.newAddedTodo.all();
+    for (const todo of todos) {
+      await todo.waitFor({ state: "visible" });
+    };
     expect(this.newAddedTodo).toHaveCount(2);
   };
 };

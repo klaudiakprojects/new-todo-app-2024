@@ -1,30 +1,19 @@
 /// <reference types="cypress" />
 
-import { Client } from 'pg';
 import TodoPage from '../../pages/todo-pom.ts';
-
-async function clearDatabase() {
-  const client = new Client({
-    user: 'postgres',
-    password: 'postgres',
-    database: 'postgres'
-  })
-  await client.connect();
-
-  const res = await client.query('DELETE FROM todos');
-  await client.end();
-};
+import { testData } from '../../fixtures/test-data.ts';
+import { post } from 'cypress/types/jquery/index';
 
 describe('example to-do app', () => {
 
-  beforeEach(async (async) => {
-    await clearDatabase();
+  beforeEach(async () => {
+    cy.task('clearDatabase');
     cy.visit('http://127.0.0.1:5500/frontend/index.html');
   })
   
 
   it('should add a new todo', () => {
-    TodoPage.addNewTodo();
+    TodoPage.addNewTodo(testData.firstTodo);
     TodoPage.newAddedTodo().should('be.visible');
 });
 
