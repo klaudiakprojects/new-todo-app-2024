@@ -3,22 +3,17 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
-app.use(cors());
-app.use(express.json());
-
-async function start() {
-    const client = new Client({
-        user: 'postgres',
-        password: 'postgres',
-        database: 'postgres'
-    })
-    await client.connect()
-
-    const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-    console.log(res.rows[0].message) // Hello world!
-    await client.end()
+const corsSettings = {
+    origin: 'http://127.0.0.1:5500', 
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', "OPTIONS"], 
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }
-start().then()
+
+app.use(cors(corsSettings));
+
+app.options('*', cors(corsSettings)) 
+
+app.use(express.json());
 
 app.get('/', (req: any, res: any) => {
     console.log(req)
@@ -34,7 +29,7 @@ app.get('/todos', async (req: any, res: any) => {
     await client.connect()
 
     const result = await client.query(
-        'SELECT * FROM todos'
+        'SELECT * FROM todos ORDER BY id ASC'
     );
     console.log(result.rows)
     res.status(200).send(result.rows);
@@ -56,6 +51,44 @@ app.post('/todos', async (req: any, res: any) => {
     );
     console.log(result) // Hello world!
     await client.end()
+    res.status(200).end();
+});
+
+app.patch('/todos', async (req: any, res: any) => {
+    const client = new Client({
+        user: 'postgres',
+        password: 'postgres',
+        database: 'postgres'
+    })
+    await client.connect()
+
+    const result = await client.query(
+        'UPDATE todos SET name=$2, status=$3 WHERE id=$1 ',
+        [req.body.id, req.body.name, req.body.status]
+    );
+
+    await client.end()
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, PATCH, OPTIONS');
+
+    res.status(200).end();
+});
+
+app.delete('/todos/:id', async (req: any, res: any) => {
+    const client = new Client({
+        user: 'postgres',
+        password: 'postgres',
+        database: 'postgres'
+    })
+    await client.connect()
+
+    const result = await client.query(
+        'DELETE FROM todos WHERE id=$1',
+        [req.params.id]
+    );
+
+    await client.end()
+    // res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, PATCH, OPTIONS');
+
     res.status(200).end();
 });
 

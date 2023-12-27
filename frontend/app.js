@@ -22,6 +22,22 @@ const getItemsFromBackend = async () => {
 
 getItemsFromBackend();
 
+const updateBackendItems = async (id, name, status) => {
+    await fetch('http://127.0.0.1:8888/todos', {
+        method: 'PATCH',
+        body: JSON.stringify({ id, name, status }),
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    });
+};
+
+const deleteItemsFromBackend = async (id) => {
+    await fetch(`http://127.0.0.1:8888/todos/${id}`, {
+        method: 'DELETE',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    });
+};
+
+
 const sendItemToBackend = (id, name, status) => {
     fetch('http://127.0.0.1:8888/todos', {
         method: 'post',
@@ -77,9 +93,13 @@ const renderTodo = (id, name, status = 'Pending') => {
 
     deleteButton.addEventListener('click', (e) => {
         let item = e.target;
-        item.parentElement.remove();
-        const todoId = item.parentElement.id;
+        let itemParentElement = item.parentElement;
+        itemParentElement.remove();
+        const todoId = itemParentElement.id;
+        console.log(todoId)
         todos.splice(todoId, 1);
+
+        deleteItemsFromBackend(todoId);
     });
 
     if (status === 'Done') {
@@ -90,17 +110,29 @@ const renderTodo = (id, name, status = 'Pending') => {
     newAddedTodo.addEventListener('click', (e) => {
         const editTodoInput = document.createElement('input');
         editTodoInput.setAttribute('class', 'edit-todo-input');
-        editTodoInput.value = '';
+        editTodoInput.value = newAddedTodo.innerHTML;
         newAddedTodo.replaceWith(editTodoInput);
+
+        editTodoInput.focus();
+
 
         editTodoInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') {
                 editTodoInput.replaceWith(newAddedTodo);
                 newAddedTodo.innerText = editTodoInput.value;
                 todos[id].name = editTodoInput.value;
+
+                updateBackendItems(id, todos[id].name, todos[id].status);
             };
         });
-    })
+
+        editTodoInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Escape') {
+                editTodoInput.replaceWith(newAddedTodo);
+            };
+        });
+
+    });
 };
 
 allTab.addEventListener('click', (e) => {
@@ -110,7 +142,7 @@ allTab.addEventListener('click', (e) => {
     if (allTab.classList.contains('active')) {
         allTab.classList.remove('active');
         return;
-    }
+    };
 
     pendingTab.classList.remove('active');
     doneTab.classList.remove('active');
@@ -130,7 +162,7 @@ pendingTab.addEventListener('click', (e) => {
     if (pendingTab.classList.contains('active')) {
         pendingTab.classList.remove('active');
         return;
-    }
+    };
 
     allTab.classList.remove('active');
     doneTab.classList.remove('active');
@@ -167,9 +199,6 @@ doneTab.addEventListener('click', (e) => {
     doneTodo.forEach(todo => {
         renderTodo(todo.id, todo.name, todo.status);
     });
-
-
-
 });
 
 addTodoButton.addEventListener('click', (e) => {

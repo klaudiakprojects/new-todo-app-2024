@@ -20,7 +20,7 @@ class TodoPage {
         this.newAddedTodo().should('contain', firstTodo);
     }
 
-    addMoreTodos(firstTodo: string, secondTodo:string) {
+    addMoreTodos(firstTodo: string, secondTodo: string) {
         this.addNewTodo(firstTodo);
         this.newTodoInput().type(secondTodo);
         this.addTodoButton().click();

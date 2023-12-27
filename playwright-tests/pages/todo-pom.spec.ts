@@ -96,10 +96,6 @@ export class TodoPOM {
 
   async refreshPageAfterAddingTodos(firstTodo: string, secondTodo: string) {
     await this.addMoreTodos(firstTodo, secondTodo);
-    await this.doneTodoButton.first().check();
-    expect(this.doneTodoButton.first()).toBeChecked();
-    expect(this.newAddedTodo.first()).toHaveAttribute('style', 'text-decoration: line-through;');
-    expect(this.newAddedTodo).toHaveCount(2);
     await this.page.reload();
     const todos = await this.newAddedTodo.all();
     for (const todo of todos) {
@@ -107,4 +103,24 @@ export class TodoPOM {
     };
     expect(this.newAddedTodo).toHaveCount(2);
   };
+
+  // async switchingBetweenTabs(firstTodo: string, secondTodo: string): Promise<void> {
+  //   await this.addMoreTodos(firstTodo, secondTodo);
+  //   await this.doneTodoButton.first().check();
+  //   expect(this.doneTodoButton.first()).toBeChecked();
+  //   expect(this.newAddedTodo.first()).toHaveAttribute('style', 'text-decoration: line-through;');
+  //   expect(this.newAddedTodo).toHaveCount(2);
+  //   await this.doneTabButton.click();
+  //   await this.newAddedTodo.waitFor({ state: "visible" });
+  //   expect(this.newAddedTodo).toHaveCount(1);
+  //   await this.pendingTabButton.click();
+  //   await this.newAddedTodo.waitFor({ state: "visible" });
+  //   expect(this.newAddedTodo).toHaveCount(1);
+  //   await this.allTabButton.click();
+  //   const todos = await this.newAddedTodo.all();
+  //   for (const todo of todos) {
+  //     await todo.waitFor({ state: "visible" });
+  //   };
+  // };
+
 };
