@@ -4,6 +4,7 @@ const allTodos = document.getElementById('allTodoList');
 const allTab = document.getElementById('allTab');
 const pendingTab = document.getElementById('pendingTab');
 const doneTab = document.getElementById('doneTab');
+const todoAppGrid = document.getElementById('todo-app-grid');
 const todos = [];
 let viewTodos = [];
 
@@ -112,8 +113,12 @@ const renderTodo = (id, name, status = 'Pending') => {
         editTodoInput.setAttribute('class', 'edit-todo-input');
         editTodoInput.value = newAddedTodo.innerHTML;
         newAddedTodo.replaceWith(editTodoInput);
-
         editTodoInput.focus();
+
+        // editTodoInput.addEventListener('focusout', () => {
+        //     editTodoInput.replaceWith(newAddedTodo);
+
+        // });
 
 
         editTodoInput.addEventListener('keyup', (e) => {
