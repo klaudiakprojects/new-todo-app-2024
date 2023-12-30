@@ -115,10 +115,10 @@ const renderTodo = (id, name, status = 'Pending') => {
         newAddedTodo.replaceWith(editTodoInput);
         editTodoInput.focus();
 
-        // editTodoInput.addEventListener('focusout', () => {
-        //     editTodoInput.replaceWith(newAddedTodo);
-
-        // });
+        editTodoInput.addEventListener('focusout', () => {
+            editTodoInput.replaceWith(newAddedTodo);
+            newAddedTodo.innerHTML = editTodoInput.value;
+        });
 
 
         editTodoInput.addEventListener('keyup', (e) => {
