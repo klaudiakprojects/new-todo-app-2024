@@ -71,6 +71,6 @@ test('refreshing the page after adding todos', async ({ page }) => {
   await todoPOM.refreshPageAfterAddingTodos(testData.firstTodo, testData.secondTodo);
 });
 
-test('switching between tabs', async ({ page }) => {
+// test('switching between tabs', async ({ page }) => {
   
-})
+// })

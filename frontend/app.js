@@ -5,7 +5,8 @@ const allTab = document.getElementById('allTab');
 const pendingTab = document.getElementById('pendingTab');
 const doneTab = document.getElementById('doneTab');
 const todoAppGrid = document.getElementById('todo-app-grid');
-const todos = [];
+const todoTabsGrid = document.getElementById('todoTabs');
+let todos = [];
 let viewTodos = [];
 
 allTab.classList.add('active');
@@ -66,6 +67,29 @@ const renderTodo = (id, name, status = 'Pending') => {
     newTodoDiv.appendChild(newAddedTodo);
 
     newTodo.value = '';
+
+    //DELETE ALL
+
+const newAddedTodos = document.querySelectorAll('.newAddedTodo');
+const deleteAllButtonId = 'deleteAllButton';
+
+if (newAddedTodos.length < 1 && !document.getElementById(deleteAllButtonId)) {
+    const deleteAllButton = document.createElement('button');
+    deleteAllButton.setAttribute('id', deleteAllButtonId);
+    deleteAllButton.textContent = 'Delete all';
+    todoTabsGrid.insertAdjacentElement('afterend', deleteAllButton);
+
+    deleteAllButton.addEventListener('click', () => {
+        for (let todo of todos) {
+            const todoElement = document.getElementById(todo.id);
+            if (todoElement) {
+                todoElement.remove();
+            }
+        }
+        todos = [];
+        deleteAllButton.remove();
+    });
+};
 
     //DONE BUTTON
     const doneButton = document.createElement('input');
