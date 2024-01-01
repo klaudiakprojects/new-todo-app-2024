@@ -16,61 +16,61 @@ async function clearDatabase() {
 };
 
 test.beforeEach(async ({ page },) => {
+  const todoPOM = new TodoPOM(page);
+
   await clearDatabase();
+  await todoPOM.goto();
+
 });
 
 test.afterAll(async ({ page },) => {
   await clearDatabase();
 });
 
-test('adding new todo', async ({ page }) => {
-
+test('Adding new todo', async ({ page }) => {
   const todoPOM = new TodoPOM(page);
 
-  await todoPOM.goto();
   await todoPOM.addNewTodo(testData.firstTodo);
 });
 
-test('edit todo', async ({ page }) => {
-
+test('Edit todo', async ({ page }) => {
   const todoPOM = new TodoPOM(page);
 
-  await todoPOM.goto();
   await todoPOM.editTodo(testData.firstTodo, testData.secondTodo);
 });
 
-test('delete todo', async ({ page }) => {
-
+test('Delete todo', async ({ page }) => {
   const todoPOM = new TodoPOM(page);
 
-  await todoPOM.goto();
   await todoPOM.deleteTodo(testData.firstTodo);
-})
+});
 
-test('adding more todos', async ({ page }) => {
-
+test('Adding more todos', async ({ page }) => {
   const todoPOM = new TodoPOM(page);
 
-  await todoPOM.goto();
   await todoPOM.addMoreTodos(testData.firstTodo, testData.secondTodo);
-})
+});
 
-test('checking todo as done', async ({ page }) => {
-
+test('Checking todo as done', async ({ page }) => {
   const todoPOM = new TodoPOM(page);
 
-  await todoPOM.goto();
   await todoPOM.doneTodo(testData.firstTodo, testData.secondTodo);
 });
 
-test('refreshing the page after adding todos', async ({ page }) => {
-
+test('Refreshing the page after adding todos', async ({ page }) => {
   const todoPOM = new TodoPOM(page);
 
-  await todoPOM.goto();
   await todoPOM.refreshPageAfterAddingTodos(testData.firstTodo, testData.secondTodo);
 });
 
-// test('switching between tabs', async ({ page }) => {
-  
-// })
+test('Deleting all todos', async ({ page }) => {
+  const todoPOM = new TodoPOM(page);
+
+  await todoPOM.deletingAllTodos(testData.firstTodo, testData.secondTodo);
+});
+
+test('Switching between tabs', async ({ page }) => {
+  const todoPOM = new TodoPOM(page);
+
+  await todoPOM.switchingBetweenTabs(testData.firstTodo, testData.secondTodo);
+});

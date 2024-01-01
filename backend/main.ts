@@ -49,12 +49,11 @@ app.post('/todos', async (req: any, res: any) => {
         'INSERT INTO todos (id, name, status) VALUES ($1, $2, $3)',
         [req.body.id, req.body.name, req.body.status]
     );
-    console.log(result) // Hello world!
     await client.end()
     res.status(200).end();
 });
 
-app.patch('/todos', async (req: any, res: any) => {
+app.patch('/todos/:id', async (req: any, res: any) => {
     const client = new Client({
         user: 'postgres',
         password: 'postgres',
@@ -64,7 +63,7 @@ app.patch('/todos', async (req: any, res: any) => {
 
     const result = await client.query(
         'UPDATE todos SET name=$2, status=$3 WHERE id=$1 ',
-        [req.body.id, req.body.name, req.body.status]
+        [req.params.id, req.body.name, req.body.status]
     );
 
     await client.end()
@@ -84,6 +83,24 @@ app.delete('/todos/:id', async (req: any, res: any) => {
     const result = await client.query(
         'DELETE FROM todos WHERE id=$1',
         [req.params.id]
+    );
+
+    await client.end()
+    // res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, PATCH, OPTIONS');
+
+    res.status(200).end();
+});
+
+app.delete('/todos', async (req: any, res: any) => {
+    const client = new Client({
+        user: 'postgres',
+        password: 'postgres',
+        database: 'postgres'
+    })
+    await client.connect()
+
+    const result = await client.query(
+        'DELETE FROM todos',
     );
 
     await client.end()

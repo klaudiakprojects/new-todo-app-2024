@@ -12,6 +12,7 @@ export class TodoPOM {
   readonly doneTabButton: Locator;
   readonly allTodoList: Locator;
   readonly doneTodoButton: Locator;
+  readonly deleteAllTodosButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -25,6 +26,7 @@ export class TodoPOM {
     this.doneTabButton = page.locator('#doneTab');
     this.allTodoList = page.locator('#allTodoList');
     this.doneTodoButton = page.locator('.done-todo-button');
+    this.deleteAllTodosButton = page.locator('#deleteAllButton');
   }
 
   async getIDs(): Promise<string[]> {
@@ -104,23 +106,29 @@ export class TodoPOM {
     expect(this.newAddedTodo).toHaveCount(2);
   };
 
-  // async switchingBetweenTabs(firstTodo: string, secondTodo: string): Promise<void> {
-  //   await this.addMoreTodos(firstTodo, secondTodo);
-  //   await this.doneTodoButton.first().check();
-  //   expect(this.doneTodoButton.first()).toBeChecked();
-  //   expect(this.newAddedTodo.first()).toHaveAttribute('style', 'text-decoration: line-through;');
-  //   expect(this.newAddedTodo).toHaveCount(2);
-  //   await this.doneTabButton.click();
-  //   await this.newAddedTodo.waitFor({ state: "visible" });
-  //   expect(this.newAddedTodo).toHaveCount(1);
-  //   await this.pendingTabButton.click();
-  //   await this.newAddedTodo.waitFor({ state: "visible" });
-  //   expect(this.newAddedTodo).toHaveCount(1);
-  //   await this.allTabButton.click();
-  //   const todos = await this.newAddedTodo.all();
-  //   for (const todo of todos) {
-  //     await todo.waitFor({ state: "visible" });
-  //   };
-  // };
+  async deletingAllTodos(firstTodo: string, secondTodo: string) {
+    await this.addMoreTodos(firstTodo, secondTodo);
+    await this.deleteAllTodosButton.click();
+    expect(this.newAddedTodo).not.toBeVisible();
+  }
+
+  async switchingBetweenTabs(firstTodo: string, secondTodo: string): Promise<void> {
+    await this.addMoreTodos(firstTodo, secondTodo);
+    await this.doneTodoButton.first().check();
+    expect(this.doneTodoButton.first()).toBeChecked();
+    expect(this.newAddedTodo.first()).toHaveAttribute('style', 'text-decoration: line-through;');
+    expect(this.newAddedTodo).toHaveCount(2);
+    await this.doneTabButton.click();
+    await this.newAddedTodo.waitFor({ state: "visible" });
+    expect(this.newAddedTodo).toHaveCount(1);
+    await this.pendingTabButton.click();
+    await this.newAddedTodo.waitFor({ state: "visible" });
+    expect(this.newAddedTodo).toHaveCount(1);
+    await this.allTabButton.click();
+    const todos = await this.newAddedTodo.all();
+    for (const todo of todos) {
+      await todo.waitFor({ state: "visible" });
+    };
+  };
 
 };

@@ -25,15 +25,22 @@ const getItemsFromBackend = async () => {
 getItemsFromBackend();
 
 const updateBackendItems = async (id, name, status) => {
-    await fetch('http://127.0.0.1:8888/todos', {
+    await fetch(`http://127.0.0.1:8888/todos/${id}`, {
         method: 'PATCH',
-        body: JSON.stringify({ id, name, status }),
+        body: JSON.stringify({ name, status }),
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
     });
 };
 
 const deleteItemsFromBackend = async (id) => {
     await fetch(`http://127.0.0.1:8888/todos/${id}`, {
+        method: 'DELETE',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    });
+};
+
+const deleteAllItemsFromBackend = async () => {
+    await fetch(`http://127.0.0.1:8888/todos`, {
         method: 'DELETE',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
     });
@@ -70,26 +77,27 @@ const renderTodo = (id, name, status = 'Pending') => {
 
     //DELETE ALL
 
-const newAddedTodos = document.querySelectorAll('.newAddedTodo');
-const deleteAllButtonId = 'deleteAllButton';
+    const newAddedTodos = document.querySelectorAll('.newAddedTodo');
+    const deleteAllButtonId = 'deleteAllButton';
 
-if (newAddedTodos.length < 1 && !document.getElementById(deleteAllButtonId)) {
-    const deleteAllButton = document.createElement('button');
-    deleteAllButton.setAttribute('id', deleteAllButtonId);
-    deleteAllButton.textContent = 'Delete all';
-    todoTabsGrid.insertAdjacentElement('afterend', deleteAllButton);
+    if (newAddedTodos.length < 1 && !document.getElementById(deleteAllButtonId)) {
+        const deleteAllButton = document.createElement('button');
+        deleteAllButton.setAttribute('id', deleteAllButtonId);
+        deleteAllButton.textContent = 'Delete all';
+        todoTabsGrid.insertAdjacentElement('afterend', deleteAllButton);
 
-    deleteAllButton.addEventListener('click', () => {
-        for (let todo of todos) {
-            const todoElement = document.getElementById(todo.id);
-            if (todoElement) {
-                todoElement.remove();
-            }
-        }
-        todos = [];
-        deleteAllButton.remove();
-    });
-};
+        deleteAllButton.addEventListener('click', () => {
+            for (let todo of todos) {
+                const todoElement = document.getElementById(todo.id);
+                if (todoElement) {
+                    todoElement.remove();
+                };
+            };
+            todos = [];
+            deleteAllButton.remove();
+            deleteAllItemsFromBackend();
+        });
+    };
 
     //DONE BUTTON
     const doneButton = document.createElement('input');
@@ -232,7 +240,15 @@ doneTab.addEventListener('click', (e) => {
 
 addTodoButton.addEventListener('click', (e) => {
     e.preventDefault();
-    const todoId = todos.length;
+    console.log(todos)
+    const lastTodo = todos[todos.length - 1];
+    console.log(lastTodo)
+    let todoId = 0;
+    if (lastTodo) {
+        todoId = lastTodo.id + 1
+    }
+
+
     const todoValue = newTodo.value;
     const todoStatus = 'Pending'
 
@@ -247,5 +263,6 @@ addTodoButton.addEventListener('click', (e) => {
 
     addTodo(todoId, todoValue, todoStatus);
     renderTodo(todoId, todoValue, todoStatus);
+
 });
 
