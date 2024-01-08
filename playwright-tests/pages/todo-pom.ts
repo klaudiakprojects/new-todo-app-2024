@@ -83,7 +83,7 @@ export class TodoPOM {
     expect(todoIDs[0]).toEqual('0');
     expect(todoIDs[1]).toEqual('1');
     expect(this.newAddedTodo).toHaveCount(2);
-  };
+    };
 
   async doneTodo(firstTodo: string, secondTodo: string) {
     await this.addMoreTodos(firstTodo, secondTodo);

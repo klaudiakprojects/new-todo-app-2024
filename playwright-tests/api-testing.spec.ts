@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
-import { TodoPOM } from './pages/todo-pom.spec.ts';
-import { testData } from './pages/test-data.spec.ts';
+import { TodoPOM } from './pages/todo-pom.ts';
+import { testData } from './pages/test-data.ts';
 import { Client } from 'pg';
 
 async function clearDatabase() {
@@ -19,7 +19,7 @@ test.beforeEach(async ({ page },) => {
     await clearDatabase();
 });
 
-test.afterAll(async ({ page },) => {
+test.afterEach(async ({ page },) => {
     await clearDatabase();
 });
 
@@ -79,5 +79,34 @@ test('Get should return edited list after patch request', async ({ request }) =>
         data: { name: updatedName }
     });
     expect(editTodoRes.status()).toBe(200);
+
+});
+
+test('Get should return empty list after deleting all request', async ({ request }) => {
+    const requestBody1 = { id: 0, name: 'Learn js', status: 'Pending' };
+    const createTodoRes1 = await request.post(`${baseUrl}/todos`, {
+        data: requestBody1
+    });
+    expect(createTodoRes1.status()).toBe(200);
+
+    const requestBody2 = { id: 1, name: 'Learn ts', status: 'Pending' };
+    const createTodoRes2 = await request.post(`${baseUrl}/todos`, {
+        data: requestBody2
+    });
+    expect(createTodoRes2.status()).toBe(200);
+
+    const getTodosResBeforeDelete = await request.get(`${baseUrl}/todos`);
+    expect(getTodosResBeforeDelete.status()).toBe(200);
+    expect(await getTodosResBeforeDelete.json()).toEqual([
+        { id: 0, name: 'Learn js', status: 'Pending' },
+        { id: 1, name: 'Learn ts', status: 'Pending' }
+    ]);
+
+    const deleteAllTodosRes = await request.delete(`${baseUrl}/todos/`);
+    expect(deleteAllTodosRes.status()).toBe(200);
+
+    const getTodosResAfterDelete = await request.get(`${baseUrl}/todos`);
+    expect(getTodosResAfterDelete.status()).toBe(200);
+    expect(await getTodosResAfterDelete.json()).toEqual([]);
 
 });

@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
-import { TodoPOM } from './pages/todo-pom.spec.ts';
-import { testData } from './pages/test-data.spec.ts';
+import { TodoPOM } from './pages/todo-pom.ts';
+import { testData } from './pages/test-data.ts';
 import { Client } from 'pg';
 
 async function clearDatabase() {
@@ -23,7 +23,7 @@ test.beforeEach(async ({ page },) => {
 
 });
 
-test.afterAll(async ({ page },) => {
+test.afterEach(async ({ page },) => {
   await clearDatabase();
 });
 
