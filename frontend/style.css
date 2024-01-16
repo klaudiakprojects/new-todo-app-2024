@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: rgb(213, 219, 235);
     text-align: center;
 }
 
@@ -11,15 +11,26 @@ body {
 
 #newTodoInput {
     padding: 10px;
-    width: 50%;
+    width: 60%;
     border-radius: 10px;
-    border: 1px solid #ccc;
-    border-color: rgb(44, 152, 152);
     margin-right: 10px;
+    border: 1px solid;
+    border-color: black;
+}
+
+.new-added-todo, .edit-todo-input {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid;
+    border-color: black;
+    /* margin: 5px 0; */
+    width: 50%;
+    display: inline-block;
 }
 
 #addNewTodoButton {
-    padding: 10px;
+    /* padding: 10px;
     width: 10%;
     border-radius: 10px;
     border: none;
@@ -27,13 +38,13 @@ body {
     font-weight: bold;
     font-size: 1em;
     color: white;
-    cursor: pointer;
+    cursor: pointer; */
 }
 
-#addNewTodoButton:hover {
+/* #addNewTodoButton:hover {
     background-color: #65d369;
 
-}
+} */
 
 #allTodoList {
     list-style: none;
@@ -41,20 +52,11 @@ body {
     padding: 0;
 }
 
-.new-added-todo, .edit-todo-input {
-    background-color: white;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 5px 0;
-    width: 50%;
-    display: inline-block;
-}
-
 .done-todo-button {
-    margin-left: 10px;
+    margin: 20px;
 }
 
-.delete-todo-button {
+/* .delete-todo-button {
     background-color: #ff6f61;
     color: white;
     padding: 8px;
@@ -66,21 +68,21 @@ body {
 
 .delete-todo-button:hover {
     background-color: rgb(255, 60, 60);
-}
+} */
 
 #todoTabs {
     margin-top: 10px;
 }
 
 #todoTabs button {
-    padding: 5px;
+    /* padding: 5px;
     width: 10%;
     border: 1px solid;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 5px; */
 }
 
-#allTab:hover {
+/* #allTab:hover {
     background-color: #add6ff;
     cursor: pointer;
 }
@@ -105,17 +107,12 @@ body {
 
 #doneTab.active {
     background-color: rgb(90, 198, 126);
-}
+} */
 
 #deleteAllButton {
-    background-color: white;
-    padding: 5px;
+    margin-top: 50px;
+    padding: 10px;
     border-radius: 5px;
-    border: none;
-    font-weight: bold;
-    font-size: 1em;
-    color: #ff6f61;
-    cursor: pointer;
-    margin-left: 55%;
-    border: 1px solid;
+    width: 30%;
+    display: inline-block;
 }
