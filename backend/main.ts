@@ -4,7 +4,7 @@ const app = express();
 const cors = require('cors');
 
 const corsSettings = {
-    origin: 'http://127.0.0.1:5500', 
+    origin: '*', 
     methods: ['GET', 'POST', 'PATCH', 'DELETE', "OPTIONS"], 
     allowedHeaders: ['Content-Type', 'Authorization'],
 }
@@ -86,7 +86,6 @@ app.delete('/todos/:id', async (req: any, res: any) => {
     );
 
     await client.end()
-    // res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, PATCH, OPTIONS');
 
     res.status(200).end();
 });
@@ -104,7 +103,6 @@ app.delete('/todos', async (req: any, res: any) => {
     );
 
     await client.end()
-    // res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, PATCH, OPTIONS');
 
     res.status(200).end();
 });
